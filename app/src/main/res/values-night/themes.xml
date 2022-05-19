@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.RakhboKoi" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.RakhboKoi" parent="Theme.MaterialComponents.DayNight.NoActionBar">
 
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/white</item>

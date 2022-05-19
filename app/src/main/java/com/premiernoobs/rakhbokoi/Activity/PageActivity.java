@@ -1,6 +1,7 @@
 package com.premiernoobs.rakhbokoi.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import android.content.Context;
 import android.graphics.Rect;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
+import com.premiernoobs.rakhbokoi.Fragment.User.LogInFragment;
 import com.premiernoobs.rakhbokoi.R;
 
 public class PageActivity extends AppCompatActivity {
@@ -18,6 +20,19 @@ public class PageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_page);
+
+        // change to night mode
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+
+        String activity = getIntent().getExtras().getString("Fragment"); // get fragment direction
+
+        if(activity.equals(String.valueOf(R.string.LOGIN_FRAGMENT))){
+
+            LogInFragment logInFragment = new LogInFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_layout_id, logInFragment).commit();
+
+        }
+
     }
 
     // on screen touch editText focus off
