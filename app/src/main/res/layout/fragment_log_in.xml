@@ -98,7 +98,7 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/edittext_string2"
                     android:textColor="@color/white"
-                    android:textSize="12dp"
+                    android:textSize="14dp"
                     android:textStyle="bold">
 
                 </com.google.android.material.textfield.TextInputEditText>
@@ -132,7 +132,7 @@
                     android:background="@drawable/edittext_string2"
                     android:inputType="textPassword"
                     android:textColor="@color/white"
-                    android:textSize="12dp"
+                    android:textSize="14dp"
                     android:textStyle="bold">
 
                 </com.google.android.material.textfield.TextInputEditText>
