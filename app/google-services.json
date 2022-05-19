@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "452356690871",
+    "project_id": "rakhbo-koi",
+    "storage_bucket": "rakhbo-koi.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:452356690871:android:0937960863699b5fa18e32",
+        "android_client_info": {
+          "package_name": "com.premiernoobs.rakhbokoi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "452356690871-oc59j5pa1q8qb809tv8u14ouk1oq9dq7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.premiernoobs.rakhbokoi",
+            "certificate_hash": "ac172adac8f1004ffff5128af63397f1e408df87"
+          }
+        },
+        {
+          "client_id": "452356690871-9ga3kk4rb3ggg32o129ebjjg82un0997.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCaS672gcxtiG2ihvc2acj5gtZO6chVGx4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "452356690871-9ga3kk4rb3ggg32o129ebjjg82un0997.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
