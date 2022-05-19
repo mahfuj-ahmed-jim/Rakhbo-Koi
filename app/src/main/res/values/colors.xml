@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!-- basic colors -->
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
@@ -7,4 +9,29 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <!-- basic colors -->
+
+    <!-- main colors -->
+    <color name="ripple_color">#D8D8D4</color>
+    <color name="shadow_color">#C5C5C5</color>
+    <color name="shade_color">#f5f8fa</color>
+    <color name="red">#DD2853</color>
+    <color name="rating_color">#FFCA28</color>
+    <color name="bottom_sheet_color">#F8F8F8</color>
+    <color name="tackButton_color">#ebeef0</color>
+    <color name="shimmer_color">#E4E2E2</color>
+    <!-- main colors -->
+
+    <!-- grey colors -->
+    <color name="grey_light_1">#E0E0E0</color>
+    <color name="grey_light_2">#BDBDBD</color>
+    <color name="grey_light_3">#828282</color>
+    <!-- grey colors -->
+
+    <!-- black colors -->
+    <color name="black_custom">#333333</color>
+    <color name="black_custom1">#4F4F4F</color>
+    <color name="black_custom2">#707070</color>
+    <!-- black colors -->
+
 </resources>
