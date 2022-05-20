@@ -22,6 +22,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.premiernoobs.rakhbokoi.Class.Class.User;
 import com.premiernoobs.rakhbokoi.Class.Firebase.FirebaseDatabaseClass;
 import com.premiernoobs.rakhbokoi.Class.Firebase.FirebaseOtp;
 import com.premiernoobs.rakhbokoi.R;
@@ -203,9 +204,14 @@ public class OtpFragment extends Fragment {
 
     private void namePage() {
 
+        // user
+        User user = new User();
+        user.setEmail(email);
+
         // set value to set next page for register
         Bundle bundle = new Bundle();
         bundle.putString("REGISTER", register);
+        bundle.putParcelable("USER", user);
 
         NameFragment nameFragment = new NameFragment();
         nameFragment.setArguments(bundle);

@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import android.os.CountDownTimer;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 import com.github.ybq.android.spinkit.sprite.Sprite;
 import com.github.ybq.android.spinkit.style.FadingCircle;
 import com.google.android.material.textfield.TextInputEditText;
+import com.premiernoobs.rakhbokoi.Class.Class.User;
 import com.premiernoobs.rakhbokoi.Class.Static.EmailStatic;
 import com.premiernoobs.rakhbokoi.R;
 
@@ -38,7 +40,7 @@ public class CarNumberFragment extends Fragment {
     private TextView warningTextView, messageTextView;
 
     // textInputEditText
-    private TextInputEditText emailEditText;
+    private TextInputEditText carNumberEditText;
 
     // button
     private Button nextButton;
@@ -52,6 +54,7 @@ public class CarNumberFragment extends Fragment {
 
     // values
     private Boolean register = false;
+    private User user;
 
     // dialogs
     private ProgressBar progressBar;
@@ -89,7 +92,7 @@ public class CarNumberFragment extends Fragment {
         init(view);
 
         // editText on text change
-        emailEditText.addTextChangedListener(new TextWatcher() {
+        carNumberEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -108,10 +111,10 @@ public class CarNumberFragment extends Fragment {
         // editText on text change
 
         // editText on focus change
-        emailEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        carNumberEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean isFocus) {
-                changeEditTextString(emailEditText, isFocus);
+                changeEditTextString(carNumberEditText, isFocus);
             }
         });
         // editText on focus change
@@ -130,7 +133,7 @@ public class CarNumberFragment extends Fragment {
 
                 if(changeButton(true)){
                     setLoader(true);
-                    namePage();
+                    passwordPage();
                 }
 
             }
@@ -141,17 +144,21 @@ public class CarNumberFragment extends Fragment {
     }
 
     // next pages
-    private void namePage() {
+    private void passwordPage() {
+
+        // user
+        user.setCarNumber(carNumberEditText.getText().toString().trim());
 
         // set value to set next page for register
         Bundle bundle = new Bundle();
         bundle.putString("REGISTER", register?"YES":"NO");
+        bundle.putParcelable("USER", user);
 
-        OtpFragment otpFragment = new OtpFragment();
-        otpFragment.setArguments(bundle);
+        PasswordFragment passwordFragment = new PasswordFragment();
+        passwordFragment.setArguments(bundle);
 
         getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_layout_id, otpFragment)
+                .replace(R.id.fragment_layout_id, passwordFragment)
                 .commit();
 
     }
@@ -184,7 +191,7 @@ public class CarNumberFragment extends Fragment {
 
         boolean isChanged = false;
 
-        if(emailEditText.getText().toString().trim().isEmpty()){
+        if(carNumberEditText.getText().toString().trim().isEmpty()){
             nextButton.setBackground(ContextCompat.getDrawable(getActivity().getApplicationContext(), R.drawable.button2));
             isChanged = false;
             if(isClicked){
@@ -201,7 +208,7 @@ public class CarNumberFragment extends Fragment {
 
     private void setWarning(String warning) {
         warningTextView.setText("*WARNING : "+warning);
-        emailEditText.setBackground(ContextCompat.getDrawable(getActivity().getApplicationContext(), R.drawable.edittext_string_red));
+        carNumberEditText.setBackground(ContextCompat.getDrawable(getActivity().getApplicationContext(), R.drawable.edittext_string_red));
     }
     // view change
 
@@ -211,6 +218,9 @@ public class CarNumberFragment extends Fragment {
         Bundle bundle = this.getArguments();
 
         if(bundle != null) {
+
+            // user
+            user = bundle.getParcelable("USER");
 
             if(!bundle.getString("REGISTER").equals("YES")){
                 messageTextView.setVisibility(View.GONE);
@@ -237,7 +247,7 @@ public class CarNumberFragment extends Fragment {
         messageTextView = view.findViewById(R.id.textViewId_message);
 
         // textInputEditText
-        emailEditText = view.findViewById(R.id.editTextId_email);
+        carNumberEditText = view.findViewById(R.id.editTextId_email);
 
         // button
         nextButton = view.findViewById(R.id.buttonId_next);

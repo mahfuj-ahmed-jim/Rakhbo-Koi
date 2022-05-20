@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import android.os.CountDownTimer;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 import com.github.ybq.android.spinkit.sprite.Sprite;
 import com.github.ybq.android.spinkit.style.FadingCircle;
 import com.google.android.material.textfield.TextInputEditText;
+import com.premiernoobs.rakhbokoi.Class.Class.User;
 import com.premiernoobs.rakhbokoi.Class.Static.EmailStatic;
 import com.premiernoobs.rakhbokoi.R;
 
@@ -38,7 +40,7 @@ public class NameFragment extends Fragment {
     private TextView warningTextView, messageTextView;
 
     // textInputEditText
-    private TextInputEditText emailEditText;
+    private TextInputEditText nameEditText;
 
     // button
     private Button nextButton;
@@ -48,6 +50,7 @@ public class NameFragment extends Fragment {
 
     // values
     private Boolean register = false;
+    private User user;
 
     // dialogs
     private ProgressBar progressBar;
@@ -85,7 +88,7 @@ public class NameFragment extends Fragment {
         init(view);
 
         // editText on text change
-        emailEditText.addTextChangedListener(new TextWatcher() {
+        nameEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -104,10 +107,10 @@ public class NameFragment extends Fragment {
         // editText on text change
 
         // editText on focus change
-        emailEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        nameEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean isFocus) {
-                changeEditTextString(emailEditText, isFocus);
+                changeEditTextString(nameEditText, isFocus);
             }
         });
         // editText on focus change
@@ -140,9 +143,13 @@ public class NameFragment extends Fragment {
     // next pages
     private void carNumberPage() {
 
+        // user
+        user.setName(nameEditText.getText().toString().trim());
+
         // set value to set next page for register
         Bundle bundle = new Bundle();
         bundle.putString("REGISTER", register?"YES":"NO");
+        bundle.putParcelable("USER", user);
 
         CarNumberFragment carNumberFragment = new CarNumberFragment();
         carNumberFragment.setArguments(bundle);
@@ -181,7 +188,7 @@ public class NameFragment extends Fragment {
 
         boolean isChanged = false;
 
-        if(emailEditText.getText().toString().trim().isEmpty()){
+        if(nameEditText.getText().toString().trim().isEmpty()){
             nextButton.setBackground(ContextCompat.getDrawable(getActivity().getApplicationContext(), R.drawable.button2));
             isChanged = false;
             if(isClicked){
@@ -198,7 +205,7 @@ public class NameFragment extends Fragment {
 
     private void setWarning(String warning) {
         warningTextView.setText("*WARNING : "+warning);
-        emailEditText.setBackground(ContextCompat.getDrawable(getActivity().getApplicationContext(), R.drawable.edittext_string_red));
+        nameEditText.setBackground(ContextCompat.getDrawable(getActivity().getApplicationContext(), R.drawable.edittext_string_red));
     }
     // view change
 
@@ -208,6 +215,8 @@ public class NameFragment extends Fragment {
         Bundle bundle = this.getArguments();
 
         if(bundle != null) {
+
+            user = bundle.getParcelable("USER");
 
             if(!bundle.getString("REGISTER").equals("YES")){
                 messageTextView.setVisibility(View.GONE);
@@ -233,7 +242,7 @@ public class NameFragment extends Fragment {
         messageTextView = view.findViewById(R.id.textViewId_message);
 
         // textInputEditText
-        emailEditText = view.findViewById(R.id.editTextId_email);
+        nameEditText = view.findViewById(R.id.editTextId_email);
 
         // button
         nextButton = view.findViewById(R.id.buttonId_next);
