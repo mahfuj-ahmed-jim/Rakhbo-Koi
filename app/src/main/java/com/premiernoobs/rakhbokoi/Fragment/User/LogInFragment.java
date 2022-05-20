@@ -2,6 +2,7 @@ package com.premiernoobs.rakhbokoi.Fragment.User;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
@@ -12,8 +13,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.premiernoobs.rakhbokoi.Class.Class.User;
+import com.premiernoobs.rakhbokoi.Class.Firebase.FirebaseDatabaseClass;
+import com.premiernoobs.rakhbokoi.Class.Firebase.FirebaseOtp;
 import com.premiernoobs.rakhbokoi.R;
 
 public class LogInFragment extends Fragment {
@@ -35,6 +45,9 @@ public class LogInFragment extends Fragment {
 
     // button
     private Button logInButton, registerButton, forgetPasswordButton;
+
+    // firebase
+    private DatabaseReference logInReference;
 
     // fragments
     private EmailFragment emailFragment = new EmailFragment();
@@ -142,7 +155,7 @@ public class LogInFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if(changeButton(true)){
-
+                    logInUser();
                 }
             }
         });
@@ -150,6 +163,37 @@ public class LogInFragment extends Fragment {
 
         return view;
     }
+
+    // firebase
+    private void logInUser() {
+
+        logInReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+
+                    // set otp value
+                    User user = dataSnapshot.getValue(User.class);
+                    if(user.getEmail().equals(emailEditText.getText().toString().trim())
+                            && user.getPassword().equals(passwordEditText.getText().toString().trim())){
+
+                        Toast.makeText(getContext(), "Log In", Toast.LENGTH_LONG).show();
+
+                    }
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+    // firebase
 
     // next pages
     private void emailPage(String register) {
@@ -245,6 +289,9 @@ public class LogInFragment extends Fragment {
         logInButton = view.findViewById(R.id.buttonId_logIn);
         registerButton = view.findViewById(R.id.buttonId_register);
         forgetPasswordButton = view.findViewById(R.id.buttonId_forgetPassword);
+
+        // firebase
+        logInReference = FirebaseDatabase.getInstance().getReference(new FirebaseDatabaseClass().getUser());
 
     }
     // initialize
