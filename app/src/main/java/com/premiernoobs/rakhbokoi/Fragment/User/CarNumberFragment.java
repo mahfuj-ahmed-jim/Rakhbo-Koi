@@ -44,7 +44,7 @@ public class CarNumberFragment extends Fragment {
     private Button nextButton;
 
     // layout as button
-    private ConstraintLayout backButton, logInButton;
+    private ConstraintLayout backButton;
 
     // layout
     private LinearLayout logInLayout;
@@ -52,7 +52,6 @@ public class CarNumberFragment extends Fragment {
 
     // values
     private Boolean register = false;
-    private EmailStatic emailStatic = new EmailStatic();
 
     // dialogs
     private ProgressBar progressBar;
@@ -119,13 +118,6 @@ public class CarNumberFragment extends Fragment {
 
         // button on click listeners
         backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getActivity().onBackPressed();
-            }
-        });
-
-        logInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 getActivity().onBackPressed();
@@ -250,7 +242,6 @@ public class CarNumberFragment extends Fragment {
         // button
         nextButton = view.findViewById(R.id.buttonId_next);
         backButton = view.findViewById(R.id.constraintLayoutId_backButton);
-        logInButton = view.findViewById(R.id.constraintLayoutId_logIn);
 
         // layout
         logInLayout = view.findViewById(R.id.linearLayoutId_logIn);

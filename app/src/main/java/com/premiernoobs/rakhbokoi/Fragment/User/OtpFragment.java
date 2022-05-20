@@ -212,7 +212,6 @@ public class OtpFragment extends Fragment {
 
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_layout_id, nameFragment)
-                .addToBackStack(null)
                 .commit();
 
     }

@@ -58,7 +58,6 @@ public class EmailFragment extends Fragment {
 
     // layout
     private LinearLayout logInLayout;
-    private ConstraintLayout loaderLayout;
 
     // values
     private Boolean register = false;
@@ -351,7 +350,6 @@ public class EmailFragment extends Fragment {
 
         // layout
         logInLayout = view.findViewById(R.id.linearLayoutId_logIn);
-        loaderLayout = view.findViewById(R.id.constraintLayoutId_loader);
 
         // dialogs
         progressBar = view.findViewById(R.id.spin_kit);
