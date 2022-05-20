@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DatabaseReference;
@@ -146,6 +147,8 @@ public class PasswordFragment extends Fragment {
         DatabaseReference firebaseDatabase = FirebaseDatabase.getInstance().getReference(new FirebaseDatabaseClass().getUser());
         String key = firebaseDatabase.push().getKey();
         firebaseDatabase.child(key).setValue(user);
+
+        Toast.makeText(getContext(), "You have registered successfully", Toast.LENGTH_LONG).show();
 
     }
 

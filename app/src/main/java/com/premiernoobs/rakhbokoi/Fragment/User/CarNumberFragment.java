@@ -2,6 +2,7 @@ package com.premiernoobs.rakhbokoi.Fragment.User;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -21,7 +22,13 @@ import android.widget.TextView;
 import com.github.ybq.android.spinkit.sprite.Sprite;
 import com.github.ybq.android.spinkit.style.FadingCircle;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.premiernoobs.rakhbokoi.Class.Class.User;
+import com.premiernoobs.rakhbokoi.Class.Firebase.FirebaseDatabaseClass;
 import com.premiernoobs.rakhbokoi.Class.Static.EmailStatic;
 import com.premiernoobs.rakhbokoi.R;
 
@@ -51,6 +58,9 @@ public class CarNumberFragment extends Fragment {
     // layout
     private LinearLayout logInLayout;
     private ConstraintLayout loaderLayout;
+
+    // firebase
+    private DatabaseReference carNumberReference;
 
     // values
     private Boolean register = false;
@@ -133,7 +143,7 @@ public class CarNumberFragment extends Fragment {
 
                 if(changeButton(true)){
                     setLoader(true);
-                    passwordPage();
+                    checkCarNumber();
                 }
 
             }
@@ -142,6 +152,43 @@ public class CarNumberFragment extends Fragment {
 
         return view;
     }
+
+    // firebase
+    private void checkCarNumber() {
+
+        carNumberReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                boolean isUnique = true;
+
+                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+
+                    // set otp value
+                    User user = dataSnapshot.getValue(User.class);
+                    if(user.getCarNumber().equals(carNumberEditText.getText().toString().trim())){
+                        setWarning("Car Number is Already Used");
+                        isUnique = false;
+                        setLoader(false);
+                        break;
+                    }
+
+                }
+
+                if(isUnique){
+                    passwordPage();
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+    // firebase
 
     // next pages
     private void passwordPage() {
@@ -159,6 +206,7 @@ public class CarNumberFragment extends Fragment {
 
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_layout_id, passwordFragment)
+                .addToBackStack(null)
                 .commit();
 
     }
@@ -195,7 +243,7 @@ public class CarNumberFragment extends Fragment {
             nextButton.setBackground(ContextCompat.getDrawable(getActivity().getApplicationContext(), R.drawable.button2));
             isChanged = false;
             if(isClicked){
-                setWarning("Enter your email address");
+                setWarning("Enter your car number");
             }
         }else{
             nextButton.setBackground(ContextCompat.getDrawable(getActivity().getApplicationContext(), R.drawable.button));
@@ -259,6 +307,9 @@ public class CarNumberFragment extends Fragment {
 
         // dialogs
         progressBar = view.findViewById(R.id.spin_kit);
+
+        // firebase
+        carNumberReference = FirebaseDatabase.getInstance().getReference(new FirebaseDatabaseClass().getUser());
 
     }
     // initialize
