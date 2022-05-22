@@ -4,6 +4,7 @@
 
     <!-- fragments tag -->
     <string name="LOGIN_FRAGMENT">LOGIN_FRAGMENT</string>
+    <string name="HOME_FRAGMENT">HOME_FRAGMENT</string>
     <!-- fragments tag -->
 
 </resources>

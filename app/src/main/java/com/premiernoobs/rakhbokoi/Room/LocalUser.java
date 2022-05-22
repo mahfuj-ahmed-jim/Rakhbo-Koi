@@ -9,23 +9,20 @@ import androidx.room.PrimaryKey;
 public class LocalUser {
 
     @PrimaryKey(autoGenerate = false)
-    @NonNull
     @ColumnInfo(name = "rowid")
     private int userId;
 
-    @NonNull
     @ColumnInfo(name = "number")
     private String number;
 
-    @NonNull
     @ColumnInfo(name = "password")
     private String password;
 
     public LocalUser() {
     }
 
-    public LocalUser(int userId) {
-        this.userId = userId;
+    public LocalUser(String number) {
+        this.number = number;
     }
 
     public int getUserId() {

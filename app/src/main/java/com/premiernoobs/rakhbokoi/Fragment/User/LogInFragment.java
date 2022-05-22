@@ -1,5 +1,6 @@
 package com.premiernoobs.rakhbokoi.Fragment.User;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -21,10 +22,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.premiernoobs.rakhbokoi.Activity.MainActivity;
+import com.premiernoobs.rakhbokoi.Activity.PageActivity;
 import com.premiernoobs.rakhbokoi.Class.Class.User;
 import com.premiernoobs.rakhbokoi.Class.Firebase.FirebaseDatabaseClass;
 import com.premiernoobs.rakhbokoi.Class.Firebase.FirebaseOtp;
 import com.premiernoobs.rakhbokoi.R;
+import com.premiernoobs.rakhbokoi.Room.LocalUser;
+import com.premiernoobs.rakhbokoi.Room.MainDatabase;
 
 public class LogInFragment extends Fragment {
 
@@ -178,7 +183,8 @@ public class LogInFragment extends Fragment {
                     if(user.getEmail().equals(emailEditText.getText().toString().trim())
                             && user.getPassword().equals(passwordEditText.getText().toString().trim())){
 
-                        Toast.makeText(getContext(), "Log In", Toast.LENGTH_LONG).show();
+                        saveToRoomDatabase(dataSnapshot.getKey());
+                        homePage();
 
                     }
 
@@ -208,6 +214,17 @@ public class LogInFragment extends Fragment {
                 .replace(R.id.fragment_layout_id, emailFragment)
                 .addToBackStack(null)
                 .commit();
+
+    }
+
+    private void homePage() {
+
+        // go to the page activity after splash screen
+        Intent intent = new Intent(getContext(), MainActivity.class);
+        intent.putExtra("Fragment", String.valueOf(R.string.HOME_FRAGMENT));
+        startActivity(intent);
+        getActivity().overridePendingTransition(0, 0); //intent soft animation
+        getActivity().finish();
 
     }
     // next pages
@@ -270,6 +287,20 @@ public class LogInFragment extends Fragment {
 
     }
     // view change
+
+    // room database
+    private void saveToRoomDatabase(String userId){
+
+        // ROOM DATABASE
+        MainDatabase mainDatabase;
+        mainDatabase = MainDatabase.getInstance(getContext());
+
+        // save value
+        LocalUser user = new LocalUser(userId);
+        mainDatabase.userDao().insertUser(user);
+
+    }
+    // room database
 
     // initialize
     private void init(View view) {

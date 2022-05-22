@@ -25,7 +25,7 @@ public class SplashActivity extends AppCompatActivity {
             mainDatabase = MainDatabase.getInstance(getApplicationContext());
 
             if(mainDatabase.userDao().getUserList().size() != 0){
-                //homePage();
+                homePage();
             }else{
                 logInPage();
             }
@@ -33,6 +33,17 @@ public class SplashActivity extends AppCompatActivity {
         }catch (Exception e){
             logInPage();
         }
+
+    }
+
+    private void homePage() {
+
+        // go to the page activity after splash screen
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        intent.putExtra("Fragment", String.valueOf(R.string.HOME_FRAGMENT));
+        startActivity(intent);
+        overridePendingTransition(0, 0); //intent soft animation
+        finish();
 
     }
 
