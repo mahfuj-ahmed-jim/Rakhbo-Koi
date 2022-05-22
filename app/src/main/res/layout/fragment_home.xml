@@ -55,7 +55,6 @@
             android:id="@+id/circleImageView"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/b2"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/guideline1"
             app:layout_constraintTop_toTopOf="parent">
@@ -75,7 +74,6 @@
                 android:id="@+id/textViewId_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Hey!"
                 android:textColor="@color/white"
                 android:textSize="18dp"
                 android:textStyle="bold">
@@ -99,8 +97,87 @@
         android:id="@+id/constraintLayout2"
         android:background="@drawable/homebackground"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.04" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.96" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.07" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.93" />
+
+        <!-- editText location -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayout_email"
+            android:layout_marginTop="16dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:hint="Location"
+            android:textColorHint="@color/grey_light_3"
+            app:boxBackgroundColor="@android:color/transparent"
+            app:boxStrokeWidth="0dp"
+            app:boxStrokeWidthFocused="0dp"
+            app:hintTextColor="@color/grey_light_3"
+            app:layout_constraintEnd_toStartOf="@+id/guideline4"
+            app:layout_constraintStart_toStartOf="@+id/guideline3"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextId_location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edittext_string2"
+                android:textColor="@color/white"
+                android:textSize="14dp"
+                android:textStyle="bold">
+
+            </com.google.android.material.textfield.TextInputEditText>
+
+        </com.google.android.material.textfield.TextInputLayout>
+        <!-- editText location -->
+
+        <!-- search button -->
+        <Button
+            android:id="@+id/buttonId_search"
+            android:layout_width="0dp"
+            android:layout_height="42dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/button"
+            android:outlineSpotShadowColor="@android:color/transparent"
+            android:text="SEARCH FOR PARKING"
+            android:textColor="@color/black_custom"
+            android:textSize="14dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guideline6"
+            app:layout_constraintStart_toStartOf="@+id/guideline5"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout_email">
+
+        </Button>
+        <!-- search button -->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
