@@ -16,7 +16,7 @@ import javax.mail.internet.MimeMessage;
 public class EmailStatic {
 
     private static String email = "rakhbo.koi123@gmail.com";
-    private static String password = "yasin 123";
+    private static String password = "yasin 123456789";
     private static String emailOtpSubject = "Verify Your Email Address";
     private static String emailOtpText = "Hello,<br>We're happy you signed up for our app. To start exploring the app & enjoy all the features, please confirm your email address.<br><br>Your Verification Code : ";
 

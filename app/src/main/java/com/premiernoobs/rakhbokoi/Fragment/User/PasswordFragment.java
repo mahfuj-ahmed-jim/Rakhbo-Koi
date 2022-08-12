@@ -1,5 +1,6 @@
 package com.premiernoobs.rakhbokoi.Fragment.User;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -18,10 +19,13 @@ import android.widget.Toast;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.premiernoobs.rakhbokoi.Activity.MainActivity;
 import com.premiernoobs.rakhbokoi.Class.Class.User;
 import com.premiernoobs.rakhbokoi.Class.Firebase.FirebaseDatabaseClass;
 import com.premiernoobs.rakhbokoi.Class.Firebase.FirebaseOtp;
 import com.premiernoobs.rakhbokoi.R;
+import com.premiernoobs.rakhbokoi.Room.LocalUser;
+import com.premiernoobs.rakhbokoi.Room.MainDatabase;
 
 public class PasswordFragment extends Fragment {
 
@@ -147,14 +151,30 @@ public class PasswordFragment extends Fragment {
         DatabaseReference firebaseDatabase = FirebaseDatabase.getInstance().getReference(new FirebaseDatabaseClass().getUser());
         String key = firebaseDatabase.push().getKey();
         firebaseDatabase.child(key).setValue(user);
+        saveToRoomDatabase(key);
 
         Toast.makeText(getContext(), "You have registered successfully", Toast.LENGTH_LONG).show();
+
+        homePage(); // next page
 
     }
 
     private void updateUser() {
     }
     // firebase
+
+    // next page
+    private void homePage() {
+
+        // go to the page activity after splash screen
+        Intent intent = new Intent(getContext(), MainActivity.class);
+        intent.putExtra("Fragment", String.valueOf(R.string.HOME_FRAGMENT));
+        startActivity(intent);
+        getActivity().overridePendingTransition(0, 0); //intent soft animation
+        getActivity().finish();
+
+    }
+    // next page
 
     // view change
     private void changeEditTextString(View view, boolean hasFocus){
@@ -191,6 +211,20 @@ public class PasswordFragment extends Fragment {
         passwordEditText.setBackground(ContextCompat.getDrawable(getActivity().getApplicationContext(), R.drawable.edittext_string_red));
     }
     // view change
+
+    // room database
+    private void saveToRoomDatabase(String userId){
+
+        // ROOM DATABASE
+        MainDatabase mainDatabase;
+        mainDatabase = MainDatabase.getInstance(getContext());
+
+        // save value
+        LocalUser user = new LocalUser(userId);
+        mainDatabase.userDao().insertUser(user);
+
+    }
+    // room database
 
     // initialize
     private void getPreviousValues(){

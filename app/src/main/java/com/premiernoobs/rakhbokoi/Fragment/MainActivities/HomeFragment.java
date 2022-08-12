@@ -19,6 +19,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -76,7 +77,7 @@ public class HomeFragment extends Fragment {
 
             }
 
-            //googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+            googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 16.0f));
         }
@@ -123,6 +124,15 @@ public class HomeFragment extends Fragment {
         });
         // editText on focus change
 
+        // on click listeners
+        profileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+        // on click listeners
+
         return view;
     }
 
@@ -146,15 +156,26 @@ public class HomeFragment extends Fragment {
                 for(DataSnapshot dataSnapshot : snapshot.getChildren()){
 
                     if(dataSnapshot.getKey().equals(getDataFromRoomDatabase().getNumber())){
+
                         // set otp value
                         User user = dataSnapshot.getValue(User.class);
-                        nameTextView.setText("Hey"+user.getName()+"!");
-                        carNumberTextView.setText("Car Number : "+user.getCarNumber());
+
+                        // name textView
+                        String name = "";
+                        try{
+                            name = user.getName().substring(0, user.getName().indexOf(' '));
+                        }catch (Exception e){
+                            name = user.getName();
+                        }
+                        nameTextView.setText("Hey "+name+"!");
+                        carNumberTextView.setText("Car Number : "+user.getCarNumber()); // card number
+
                         // set image
                         profileImage.setBackground(null);
                         Glide.with(getContext())
                                 .load(R.drawable.b2)
                                 .into(profileImage);
+
                     }
 
                 }

@@ -11,6 +11,7 @@ import android.os.CountDownTimer;
 import android.os.StrictMode;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +36,7 @@ import com.premiernoobs.rakhbokoi.Class.Static.EmailStatic;
 import com.premiernoobs.rakhbokoi.R;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
@@ -197,7 +199,12 @@ public class EmailFragment extends Fragment {
                 }
 
                 if(isUnique){
-                    sendEmail();
+                    try{
+                        //sendEmail(); // send otp mail
+                        passwordPage();
+                    }catch (Exception e){
+                        Log.d("Verify", e.getMessage());
+                    }
                 }
 
             }
@@ -234,8 +241,7 @@ public class EmailFragment extends Fragment {
 
             // firebase
             DatabaseReference firebaseDatabase = FirebaseDatabase.getInstance().getReference(new FirebaseDatabaseClass().getOtp());
-            String key = firebaseDatabase.push().getKey();
-            firebaseDatabase.child(key).setValue(new FirebaseOtp(emailEditText.getText().toString().trim(), otp, getTime()));
+            firebaseDatabase.child(Calendar.getInstance().getTimeInMillis()+"").setValue(new FirebaseOtp(emailEditText.getText().toString().trim(), otp, getTime()));
 
             otpPage();
         }else{
@@ -301,6 +307,27 @@ public class EmailFragment extends Fragment {
 
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_layout_id, otpFragment)
+                .commit();
+
+    }
+
+    private void passwordPage() {
+
+        // user
+        User user = new User();
+        user.setEmail(emailEditText.getText().toString().trim());
+
+        // set value to set next page for register
+        Bundle bundle = new Bundle();
+        bundle.putString("EMAIL", emailEditText.getText().toString().trim());
+        bundle.putString("REGISTER", register?"YES":"NO");
+        bundle.putParcelable("USER", user);
+
+        NameFragment nameFragment = new NameFragment();
+        nameFragment.setArguments(bundle);
+
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_layout_id, nameFragment)
                 .commit();
 
     }
