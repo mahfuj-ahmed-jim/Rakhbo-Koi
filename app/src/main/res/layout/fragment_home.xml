@@ -129,34 +129,18 @@
             app:layout_constraintGuide_percent="0.93" />
 
         <!-- editText location -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textInputLayout_email"
+        <TextView
+            android:id="@+id/textView_location"
             android:layout_marginTop="16dp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
-            android:hint="Location"
-            android:textColorHint="@color/grey_light_3"
-            app:boxBackgroundColor="@android:color/transparent"
-            app:boxStrokeWidth="0dp"
-            app:boxStrokeWidthFocused="0dp"
-            app:hintTextColor="@color/grey_light_3"
+            android:text="Current Location : "
             app:layout_constraintEnd_toStartOf="@+id/guideline4"
             app:layout_constraintStart_toStartOf="@+id/guideline3"
             app:layout_constraintTop_toTopOf="parent">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editTextId_location"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/edittext_string2"
-                android:textColor="@color/white"
-                android:textSize="14dp"
-                android:textStyle="bold">
-
-            </com.google.android.material.textfield.TextInputEditText>
-
-        </com.google.android.material.textfield.TextInputLayout>
+        </TextView>
         <!-- editText location -->
 
         <!-- search button -->
@@ -174,7 +158,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/guideline6"
             app:layout_constraintStart_toStartOf="@+id/guideline5"
-            app:layout_constraintTop_toBottomOf="@+id/textInputLayout_email">
+            app:layout_constraintTop_toBottomOf="@+id/textView_location">
 
         </Button>
         <!-- search button -->

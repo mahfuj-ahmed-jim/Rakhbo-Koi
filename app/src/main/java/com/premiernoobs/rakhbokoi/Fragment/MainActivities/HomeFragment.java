@@ -1,12 +1,22 @@
 package com.premiernoobs.rakhbokoi.Fragment.MainActivities;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,9 +38,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.premiernoobs.rakhbokoi.Class.Class.User;
 import com.premiernoobs.rakhbokoi.Class.Firebase.FirebaseDatabaseClass;
+import com.premiernoobs.rakhbokoi.Fragment.User.OtpFragment;
 import com.premiernoobs.rakhbokoi.R;
 import com.premiernoobs.rakhbokoi.Room.LocalUser;
 import com.premiernoobs.rakhbokoi.Room.MainDatabase;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -45,8 +60,17 @@ public class HomeFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    // for permission
+    private int LOCATION_PERMISSION_CODE = 1;
+
+    // for location
+    private double longitude = 90.426959, latitude = 23.815166;
+
     // textView
-    private TextView nameTextView, carNumberTextView;
+    private TextView nameTextView, carNumberTextView, locationTextView;
+
+    // layout as button
+    private ConstraintLayout settingsButton;
 
     // imageView
     private CircleImageView profileImage;
@@ -56,6 +80,7 @@ public class HomeFragment extends Fragment {
 
     // firebase
     private DatabaseReference userReference;
+    private String name, number;
 
     // map call back
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
@@ -115,20 +140,18 @@ public class HomeFragment extends Fragment {
         // initialize
         init(view);
 
-        // editText on focus change
-        locationEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean isFocus) {
-                changeEditTextString(locationEditText, isFocus);
-            }
-        });
-        // editText on focus change
-
         // on click listeners
         profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
+            }
+        });
+
+        settingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                settingsPage();
             }
         });
         // on click listeners
@@ -161,13 +184,15 @@ public class HomeFragment extends Fragment {
                         User user = dataSnapshot.getValue(User.class);
 
                         // name textView
-                        String name = "";
+                        String subName = "";
                         try{
-                            name = user.getName().substring(0, user.getName().indexOf(' '));
-                        }catch (Exception e){
                             name = user.getName();
+                            number = user.getCarNumber();
+                            subName = name.substring(0, user.getName().indexOf(' '));
+                        }catch (Exception e){
+                            subName = user.getName();
                         }
-                        nameTextView.setText("Hey "+name+"!");
+                        nameTextView.setText("Hey "+subName+"!");
                         carNumberTextView.setText("Car Number : "+user.getCarNumber()); // card number
 
                         // set image
@@ -190,6 +215,110 @@ public class HomeFragment extends Fragment {
 
     }
     // firebase
+
+    // location
+    private void getLocationName() {
+
+        Geocoder geocoder;
+        List<Address> addresses;
+        geocoder = new Geocoder(getActivity(), Locale.getDefault());
+
+        try {
+
+            addresses = geocoder.getFromLocation(latitude, longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+
+            String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+            //String city = addresses.get(0).getLocality();
+            //String state = addresses.get(0).getAdminArea();
+            //String country = addresses.get(0).getCountryName();
+            //String postalCode = addresses.get(0).getPostalCode();
+            //String knownName = addresses.get(0).getFeatureName();
+
+            locationTextView.setText("Current Location : "+address);
+
+        } catch (IOException e) {
+            Log.d("Verify", e.getMessage());
+        }
+
+    }
+
+    private void getLocation() {
+
+        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+
+        // check permission
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+
+        // get location
+        if (locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER) != null) {
+            Location location = locationManager
+                    .getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            longitude = location.getLongitude();
+            latitude = location.getLatitude();
+        } else {
+            Location location = locationManager
+                    .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            longitude = location.getLongitude();
+            latitude = location.getLatitude();
+        }
+
+        // set location name
+        try{
+            getLocationName();
+        }catch (Exception e){
+            Log.d("Verify", e.getMessage());
+        }
+
+    }
+
+    private void permissionForLocation(boolean isClicked) {
+
+        // permission for storage
+        if(ContextCompat.checkSelfPermission(getActivity().getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION)== PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(getActivity().getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION)== PackageManager.PERMISSION_GRANTED
+        ){
+
+            // if permission is granted fetch pic from gallery
+            try{
+                getLocation();
+            }catch (Exception e){
+                Log.d("Verify", e.getMessage());
+            }
+
+        }else{
+
+            if(isClicked){
+                // permission request
+                requestPermissions(new String[] {Manifest.permission.ACCESS_COARSE_LOCATION,
+                                Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_BACKGROUND_LOCATION},
+                        LOCATION_PERMISSION_CODE);
+            }
+
+        }
+
+    }
+    // location
+
+    // next page
+    private void settingsPage() {
+
+        // set value to set next page for register
+        Bundle bundle = new Bundle();
+        bundle.putString("NAME", name);
+        bundle.putString("NUMBER", number);
+
+        SettingsFragment settingsFragment = new SettingsFragment();
+        settingsFragment.setArguments(bundle);
+
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_layout_id, settingsFragment)
+                .addToBackStack(null)
+                .commit();
+
+    }
+    // next page
 
     // change view
     private void changeEditTextString(View view, boolean hasFocus){
@@ -218,6 +347,7 @@ public class HomeFragment extends Fragment {
     private void init(View view) {
         initializeViews(view);
         getUserInformation();
+        permissionForLocation(true); // location
     }
 
     private void initializeViews(View view) {
@@ -225,15 +355,16 @@ public class HomeFragment extends Fragment {
         // textView
         nameTextView = view.findViewById(R.id.textViewId_name);
         carNumberTextView = view.findViewById(R.id.textViewId_carNumber);
+        locationTextView = view.findViewById(R.id.textView_location);
 
         // imageView
         profileImage = view.findViewById(R.id.circleImageView);
 
-        // editText
-        locationEditText = view.findViewById(R.id.editTextId_location);
-
         // firebase
         userReference = FirebaseDatabase.getInstance().getReference(new FirebaseDatabaseClass().getUser());
+
+        // layout as button
+        settingsButton = view.findViewById(R.id.constraintLayout3);
 
     }
     // initialize

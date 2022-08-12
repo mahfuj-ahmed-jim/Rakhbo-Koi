@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.premiernoobs.rakhbokoi.R;
 
@@ -20,6 +21,9 @@ public class SettingsFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    // textView
+    private TextView nameTextView, numberTextView;
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -50,6 +54,40 @@ public class SettingsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
+        // initialize
+        init(view);
+
         return view;
     }
+
+    // init
+    private void getPreviousValues(){
+
+        Bundle bundle = this.getArguments();
+
+        if(bundle != null) {
+
+            nameTextView.setText(bundle.getString("NAME"));
+            numberTextView.setText(bundle.getString("NUMBER"));
+
+        }else{
+
+        }
+
+    }
+
+    private void init(View view) {
+        initializeView(view);
+        getPreviousValues();
+    }
+
+    private void initializeView(View view) {
+
+        // textView
+        nameTextView = view.findViewById(R.id.textView_name);
+        numberTextView = view.findViewById(R.id.textView_phoneNumber);
+
+    }
+    // init
+
 }
