@@ -117,6 +117,7 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/constraintLayoutId_accountSettings"
                     android:clickable="true"
+                    android:background="@drawable/background_highlight"
                     android:paddingVertical="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
@@ -138,7 +139,7 @@
                     <!-- icon -->
                     <LinearLayout
                         android:id="@+id/linearLayout4"
-                        android:layout_width="24dp"
+                        android:layout_width="0dp"
                         android:layout_height="24dp"
                         android:gravity="center"
                         android:orientation="vertical"
@@ -147,8 +148,9 @@
                         app:layout_constraintTop_toTopOf="parent">
 
                         <ImageView
-                            android:layout_width="18.06dp"
-                            android:layout_height="18.06dp">
+                            android:layout_width="0dp"
+                            android:layout_height="18.06dp"
+                            tools:ignore="Suspicious0dp">
 
                         </ImageView>
 
@@ -189,6 +191,7 @@
                 <!-- Digital wallet -->
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:clickable="true"
+                    android:background="@drawable/background_highlight"
                     android:paddingVertical="10dp"
                     android:layout_marginTop="5dp"
                     android:layout_width="match_parent"
@@ -211,7 +214,7 @@
                     <!-- icon -->
                     <LinearLayout
                         android:id="@+id/linearLayout5"
-                        android:layout_width="24dp"
+                        android:layout_width="0dp"
                         android:layout_height="24dp"
                         android:gravity="center"
                         android:orientation="vertical"
@@ -220,8 +223,9 @@
                         app:layout_constraintTop_toTopOf="parent">
 
                         <ImageView
-                            android:layout_width="18.08dp"
-                            android:layout_height="15.73dp">
+                            android:layout_width="0dp"
+                            android:layout_height="15.73dp"
+                            tools:ignore="Suspicious0dp">
 
                         </ImageView>
 
@@ -262,6 +266,7 @@
                 <!-- location -->
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:clickable="true"
+                    android:background="@drawable/background_highlight"
                     android:paddingVertical="10dp"
                     android:layout_marginTop="5dp"
                     android:layout_width="match_parent"
@@ -284,7 +289,7 @@
                     <!-- icon -->
                     <LinearLayout
                         android:id="@+id/linearLayout6"
-                        android:layout_width="24dp"
+                        android:layout_width="0dp"
                         android:layout_height="24dp"
                         android:gravity="center"
                         android:orientation="vertical"
@@ -293,8 +298,9 @@
                         app:layout_constraintTop_toTopOf="parent">
 
                         <ImageView
-                            android:layout_width="13.85dp"
-                            android:layout_height="18dp">
+                            android:layout_width="0dp"
+                            android:layout_height="18dp"
+                            tools:ignore="Suspicious0dp">
 
                         </ImageView>
 
@@ -335,6 +341,7 @@
                 <!-- language -->
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:clickable="true"
+                    android:background="@drawable/background_highlight"
                     android:paddingVertical="10dp"
                     android:layout_marginTop="5dp"
                     android:layout_width="match_parent"
@@ -357,7 +364,7 @@
                     <!-- icon -->
                     <LinearLayout
                         android:id="@+id/linearLayout7"
-                        android:layout_width="24dp"
+                        android:layout_width="0dp"
                         android:layout_height="24dp"
                         android:gravity="center"
                         android:orientation="vertical"
@@ -366,8 +373,9 @@
                         app:layout_constraintTop_toTopOf="parent">
 
                         <ImageView
-                            android:layout_width="18.04dp"
-                            android:layout_height="18.04dp">
+                            android:layout_width="0dp"
+                            android:layout_height="18.04dp"
+                            tools:ignore="Suspicious0dp">
 
                         </ImageView>
 
@@ -408,6 +416,7 @@
                 <!-- permission -->
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:clickable="true"
+                    android:background="@drawable/background_highlight"
                     android:paddingVertical="10dp"
                     android:layout_marginTop="5dp"
                     android:layout_width="match_parent"
@@ -430,7 +439,7 @@
                     <!-- icon -->
                     <LinearLayout
                         android:id="@+id/linearLayout8"
-                        android:layout_width="24dp"
+                        android:layout_width="0dp"
                         android:layout_height="24dp"
                         android:gravity="center"
                         android:orientation="vertical"
@@ -439,8 +448,9 @@
                         app:layout_constraintTop_toTopOf="parent">
 
                         <ImageView
-                            android:layout_width="18.06dp"
-                            android:layout_height="18.06dp">
+                            android:layout_width="0dp"
+                            android:layout_height="18.06dp"
+                            tools:ignore="Suspicious0dp">
 
                         </ImageView>
 
@@ -481,6 +491,7 @@
                 <!-- terms & condition -->
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:clickable="true"
+                    android:background="@drawable/background_highlight"
                     android:paddingVertical="10dp"
                     android:layout_marginTop="5dp"
                     android:layout_width="match_parent"
@@ -503,7 +514,7 @@
                     <!-- icon -->
                     <LinearLayout
                         android:id="@+id/linearLayout9"
-                        android:layout_width="24dp"
+                        android:layout_width="0dp"
                         android:layout_height="24dp"
                         android:gravity="center"
                         android:orientation="vertical"
@@ -512,8 +523,9 @@
                         app:layout_constraintTop_toTopOf="parent">
 
                         <ImageView
-                            android:layout_width="18.06dp"
-                            android:layout_height="18.06dp">
+                            android:layout_width="0dp"
+                            android:layout_height="18.06dp"
+                            tools:ignore="Suspicious0dp">
 
                         </ImageView>
 
@@ -555,6 +567,7 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/constraintLayoutId_logOut"
                     android:clickable="true"
+                    android:background="@drawable/background_highlight"
                     android:paddingVertical="10dp"
                     android:layout_marginTop="50dp"
                     android:layout_width="match_parent"
@@ -570,7 +583,7 @@
                     <!-- icon -->
                     <LinearLayout
                         android:id="@+id/linearLayout10"
-                        android:layout_width="24dp"
+                        android:layout_width="0dp"
                         android:layout_height="24dp"
                         android:gravity="center"
                         android:orientation="vertical"
@@ -579,8 +592,9 @@
                         app:layout_constraintTop_toTopOf="parent">
 
                         <ImageView
-                            android:layout_width="18.15dp"
-                            android:layout_height="18.15dp">
+                            android:layout_width="0dp"
+                            android:layout_height="18.15dp"
+                            tools:ignore="Suspicious0dp">
 
                         </ImageView>
 

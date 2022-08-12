@@ -1,15 +1,20 @@
 package com.premiernoobs.rakhbokoi.Fragment.MainActivities;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.premiernoobs.rakhbokoi.Activity.PageActivity;
 import com.premiernoobs.rakhbokoi.R;
+import com.premiernoobs.rakhbokoi.Room.MainDatabase;
 
 public class SettingsFragment extends Fragment {
 
@@ -24,6 +29,9 @@ public class SettingsFragment extends Fragment {
 
     // textView
     private TextView nameTextView, numberTextView;
+
+    // layout as button
+    private ConstraintLayout logOutButton;
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -57,8 +65,46 @@ public class SettingsFragment extends Fragment {
         // initialize
         init(view);
 
+        // con click listeners
+        logOutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                logOut();
+            }
+        });
+        // con click listeners
+
         return view;
     }
+
+    // next page
+    private void welcomePage(){
+
+        // go to the main activity after splash screen
+        Intent intent = new Intent(getContext(), PageActivity.class);
+        intent.putExtra("Fragment", String.valueOf(R.string.LOGIN_FRAGMENT));
+        startActivity(intent);
+        getActivity().finish();
+
+    }
+    // next page
+
+    // room database
+    private void logOut() {
+
+        // ROOM DATABASE
+        try{
+            MainDatabase mainDatabase;
+            mainDatabase = MainDatabase.getInstance(getContext());
+            mainDatabase.userDao().deleteUser(mainDatabase.userDao().getUserList().get(0));
+
+            welcomePage();
+        }catch (Exception e){
+            Log.d("Verify", e.getMessage());
+        }
+
+    }
+    // room database
 
     // init
     private void getPreviousValues(){
@@ -86,6 +132,9 @@ public class SettingsFragment extends Fragment {
         // textView
         nameTextView = view.findViewById(R.id.textView_name);
         numberTextView = view.findViewById(R.id.textView_phoneNumber);
+
+        // layout as button
+        logOutButton = view.findViewById(R.id.constraintLayoutId_logOut);
 
     }
     // init
