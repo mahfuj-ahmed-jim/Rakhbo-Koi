@@ -21,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -29,6 +30,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DataSnapshot;
@@ -36,6 +38,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.premiernoobs.rakhbokoi.Class.Class.Parking;
 import com.premiernoobs.rakhbokoi.Class.Class.User;
 import com.premiernoobs.rakhbokoi.Class.Firebase.FirebaseDatabaseClass;
 import com.premiernoobs.rakhbokoi.Fragment.User.OtpFragment;
@@ -79,7 +82,7 @@ public class HomeFragment extends Fragment {
     private TextInputEditText locationEditText;
 
     // firebase
-    private DatabaseReference userReference;
+    private DatabaseReference userReference, parkingReference;
     private String name, number;
 
     // map call back
@@ -87,7 +90,7 @@ public class HomeFragment extends Fragment {
 
         @Override
         public void onMapReady(GoogleMap googleMap) {
-            LatLng sydney = new LatLng(23.742096, 90.427698);
+            LatLng bashabo = new LatLng(23.742096, 90.427698);
 
             try {
                 // Customise the styling of the base map using a JSON object defined
@@ -102,11 +105,52 @@ public class HomeFragment extends Fragment {
 
             }
 
-            googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 16.0f));
+            //googleMap.addMarker(new MarkerOptions().position(bashabo).title("Marker in Sydney"));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLng(bashabo));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(bashabo, 16.0f));
+
+            getParkingList(googleMap);
         }
     };
+
+    private void getParkingList(GoogleMap googleMap) {
+
+        parkingReference = FirebaseDatabase.getInstance().getReference(new FirebaseDatabaseClass().getParking());
+        parkingReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+
+                    Parking parking = dataSnapshot.getValue(Parking.class);
+
+                    if(parking.isAvailable()){
+                        googleMap.addMarker(new MarkerOptions().position(
+                                new LatLng(parking.getLatitude(),
+                                        parking.getLongitude())).
+                                title(parking.getAddress()+"\nLatitude: "+parking.getLatitude()
+                                        +"\nLongitude: "+parking.getLongitude()));
+
+                        googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                            @Override
+                            public boolean onMarkerClick(@NonNull Marker marker) {
+                                Toast.makeText(getContext(), marker.getTitle(), Toast.LENGTH_LONG).show();
+                                return false;
+                            }
+                        });
+                    }
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
 
     public HomeFragment() {
         // Required empty public constructor
