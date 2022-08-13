@@ -172,7 +172,7 @@ public class LogInFragment extends Fragment {
         parkingRegisterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                registerParkingPage();
             }
         });
         // button on click listener
@@ -236,6 +236,18 @@ public class LogInFragment extends Fragment {
         startActivity(intent);
         getActivity().overridePendingTransition(0, 0); //intent soft animation
         getActivity().finish();
+
+    }
+
+    private void registerParkingPage() {
+
+        // set value to set next page for register
+        ParkingRegisterFragment parkingRegisterFragment = new ParkingRegisterFragment();
+
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_layout_id, parkingRegisterFragment)
+                .addToBackStack(null)
+                .commit();
 
     }
     // next pages
