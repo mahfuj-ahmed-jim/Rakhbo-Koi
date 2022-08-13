@@ -4,6 +4,7 @@ public class FirebaseDatabaseClass {
 
     private String otp = "OTP";
     private String user = "USER";
+    private String parking = "PARKING";
 
     public FirebaseDatabaseClass() {
     }
@@ -14,6 +15,10 @@ public class FirebaseDatabaseClass {
 
     public String getUser() {
         return user;
+    }
+
+    public String getParking() {
+        return parking;
     }
 
 }

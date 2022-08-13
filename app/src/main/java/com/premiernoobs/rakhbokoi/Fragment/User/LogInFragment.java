@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
@@ -50,6 +51,9 @@ public class LogInFragment extends Fragment {
 
     // button
     private Button logInButton, registerButton, forgetPasswordButton;
+
+    // layout as button
+    private ConstraintLayout parkingRegisterButton;
 
     // firebase
     private DatabaseReference logInReference;
@@ -162,6 +166,13 @@ public class LogInFragment extends Fragment {
                 if(changeButton(true)){
                     logInUser();
                 }
+            }
+        });
+
+        parkingRegisterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
             }
         });
         // button on click listener
@@ -320,6 +331,9 @@ public class LogInFragment extends Fragment {
         logInButton = view.findViewById(R.id.buttonId_logIn);
         registerButton = view.findViewById(R.id.buttonId_register);
         forgetPasswordButton = view.findViewById(R.id.buttonId_forgetPassword);
+
+        // layout as button
+        parkingRegisterButton = view.findViewById(R.id.constraintLayoutId_logIn);
 
         // firebase
         logInReference = FirebaseDatabase.getInstance().getReference(new FirebaseDatabaseClass().getUser());
