@@ -43,6 +43,7 @@ import com.premiernoobs.rakhbokoi.Class.Class.Parking;
 import com.premiernoobs.rakhbokoi.Class.Class.User;
 import com.premiernoobs.rakhbokoi.Class.Firebase.FirebaseDatabaseClass;
 import com.premiernoobs.rakhbokoi.Class.Firebase.Otp;
+import com.premiernoobs.rakhbokoi.Dialog.OtpDialog;
 import com.premiernoobs.rakhbokoi.Dialog.SearchDialog;
 import com.premiernoobs.rakhbokoi.Fragment.User.OtpFragment;
 import com.premiernoobs.rakhbokoi.R;
@@ -52,6 +53,7 @@ import com.premiernoobs.rakhbokoi.Room.MainDatabase;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -91,15 +93,19 @@ public class HomeFragment extends Fragment {
     private DatabaseReference userReference, parkingReference;
     private String name, number;
     private boolean search = false;
+    public static GoogleMap googleMap;
+    private int otp;
 
     // dialog
     private SearchDialog searchDialog;
+    private OtpDialog otpDialog;
 
     // map call back
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
         @Override
         public void onMapReady(GoogleMap googleMap) {
+            new HomeFragment().googleMap = googleMap;
             LatLng bashabo = new LatLng(latitude, longitude);
 
             try {
@@ -122,47 +128,6 @@ public class HomeFragment extends Fragment {
             //getParkingList(googleMap);
         }
     };
-
-    private void getParkingList(GoogleMap googleMap) {
-
-        parkingReference = FirebaseDatabase.getInstance().getReference(new FirebaseDatabaseClass().getParking());
-        parkingReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
-
-                    Parking parking = dataSnapshot.getValue(Parking.class);
-
-                    /*if(parking.isAvailable()){
-
-                    }*/
-
-                    googleMap.addMarker(new MarkerOptions().position(
-                            new LatLng(parking.getLatitude(),
-                                    parking.getLongitude())).
-                            title(parking.getAddress()+"\nLatitude: "+parking.getLatitude()
-                                    +"\nLongitude: "+parking.getLongitude()));
-
-                    googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                        @Override
-                        public boolean onMarkerClick(@NonNull Marker marker) {
-                            Toast.makeText(getContext(), marker.getTitle(), Toast.LENGTH_LONG).show();
-                            return false;
-                        }
-                    });
-
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-    }
 
     public HomeFragment() {
         // Required empty public constructor
@@ -214,9 +179,17 @@ public class HomeFragment extends Fragment {
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 search = true;
                 searchDialog.show();
-                updateOtp();
+
+                Thread newThread = new Thread(() -> {
+                    generateOtp();
+                });
+                newThread.start();
+
+                searchForParking();
+
             }
         });
 
@@ -240,6 +213,29 @@ public class HomeFragment extends Fragment {
         if (mapFragment != null) {
             mapFragment.getMapAsync(callback);
         }
+    }
+
+    private void addMarker(Parking parking) {
+
+        googleMap.addMarker(new MarkerOptions().position(
+                new LatLng(parking.getLatitude(),
+                        parking.getLongitude())).
+                title(parking.getAddress()+"\nLatitude: "+parking.getLatitude()
+                        +"\nLongitude: "+parking.getLongitude()));
+
+        googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(@NonNull Marker marker) {
+                Toast.makeText(getContext(), marker.getTitle(), Toast.LENGTH_LONG).show();
+                return false;
+            }
+        });
+
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(
+                new LatLng(parking.getLatitude(), parking.getLongitude())));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                new LatLng(parking.getLatitude(), parking.getLongitude()), 16.0f));
+
     }
 
     // firebase
@@ -288,9 +284,54 @@ public class HomeFragment extends Fragment {
 
     }
 
+    private void searchForParking() {
+
+        parkingReference = FirebaseDatabase.getInstance().getReference(new FirebaseDatabaseClass().getParking());
+        parkingReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+
+                    Parking parking = dataSnapshot.getValue(Parking.class);
+                    String[] available = parking.getAvailable().split(",");
+
+                    if(available[0].equals("0")){
+
+                        if(search){
+
+                            search = false;
+                            Toast.makeText(getContext(), "Found Parking", Toast.LENGTH_LONG).show();
+                            searchDialog.dismiss();
+                            addMarker(parking);
+                            updateOtp();
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+
     private void updateOtp() {
         DatabaseReference firebaseDatabase = FirebaseDatabase.getInstance().getReference(new FirebaseDatabaseClass().getOtp());
-        firebaseDatabase.child("OTP").setValue(12345);
+        firebaseDatabase.child("OTP").setValue(new Otp(otp));
+    }
+
+    private void generateOtp() {
+        Random random = new Random();
+        while(otp<=9999){
+            otp = random.nextInt(9999);
+        }
     }
     // firebase
 
@@ -449,6 +490,7 @@ public class HomeFragment extends Fragment {
 
         // dialog
         searchDialog = new SearchDialog(getActivity());
+        otpDialog = new OtpDialog(getActivity());
 
     }
     // initialize
