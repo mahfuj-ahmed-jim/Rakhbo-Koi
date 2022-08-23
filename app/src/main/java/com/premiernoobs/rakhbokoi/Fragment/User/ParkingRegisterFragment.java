@@ -95,9 +95,9 @@ public class ParkingRegisterFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                // firebase
                 DatabaseReference firebaseDatabase = FirebaseDatabase.getInstance().getReference(new FirebaseDatabaseClass().getParking());
-                firebaseDatabase.setValue(new Parking(addressEditText.getText().toString().trim(),
+                String key = firebaseDatabase.push().getKey();
+                firebaseDatabase.child(key).setValue(new Parking(addressEditText.getText().toString().trim(),
                         Double.parseDouble(longitudeEditText.getText().toString()),
                         Double.parseDouble(latitudeEditText.getText().toString())));
 

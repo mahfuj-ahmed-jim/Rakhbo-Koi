@@ -42,6 +42,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.premiernoobs.rakhbokoi.Class.Class.Parking;
 import com.premiernoobs.rakhbokoi.Class.Class.User;
 import com.premiernoobs.rakhbokoi.Class.Firebase.FirebaseDatabaseClass;
+import com.premiernoobs.rakhbokoi.Class.Firebase.Otp;
 import com.premiernoobs.rakhbokoi.Dialog.SearchDialog;
 import com.premiernoobs.rakhbokoi.Fragment.User.OtpFragment;
 import com.premiernoobs.rakhbokoi.R;
@@ -215,6 +216,7 @@ public class HomeFragment extends Fragment {
             public void onClick(View view) {
                 search = true;
                 searchDialog.show();
+                updateOtp();
             }
         });
 
@@ -284,6 +286,11 @@ public class HomeFragment extends Fragment {
             }
         });
 
+    }
+
+    private void updateOtp() {
+        DatabaseReference firebaseDatabase = FirebaseDatabase.getInstance().getReference(new FirebaseDatabaseClass().getOtp());
+        firebaseDatabase.child("OTP").setValue(12345);
     }
     // firebase
 
