@@ -13,7 +13,7 @@ public class OtpDialog {
 
     private Activity activity;
     private Dialog searchDialog;
-    public TextView directionButton, otpMessage;
+    public TextView directionButton, otpMessage, slotNumberTextView;
 
     public OtpDialog(Activity activity) {
         this.activity = activity;
@@ -34,6 +34,7 @@ public class OtpDialog {
         searchDialog.setCancelable(false);
         directionButton = searchDialog.findViewById(R.id.cancelButton_id);
         otpMessage = searchDialog.findViewById(R.id.textViewId_otp);
+        slotNumberTextView = searchDialog.findViewById(R.id.textViewId_slot);
     }
 
 }

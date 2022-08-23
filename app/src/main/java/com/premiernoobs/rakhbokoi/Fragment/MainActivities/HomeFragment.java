@@ -91,7 +91,7 @@ public class HomeFragment extends Fragment {
 
     // firebase
     private DatabaseReference userReference, parkingReference;
-    private String name, number;
+    private String name, number, slot;
     private boolean search = false;
     public static GoogleMap googleMap;
     private int otp;
@@ -234,7 +234,7 @@ public class HomeFragment extends Fragment {
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(
                 new LatLng(parking.getLatitude(), parking.getLongitude())));
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                new LatLng(parking.getLatitude(), parking.getLongitude()), 16.0f));
+                new LatLng(parking.getLatitude(), parking.getLongitude()), 18.0f));
 
     }
 
@@ -297,17 +297,17 @@ public class HomeFragment extends Fragment {
                     String[] available = parking.getAvailable().split(",");
 
                     if(available[0].equals("0")){
-
-                        if(search){
-
-                            search = false;
-                            Toast.makeText(getContext(), "Found Parking", Toast.LENGTH_LONG).show();
-                            searchDialog.dismiss();
-                            addMarker(parking);
-                            updateOtp();
-
-                        }
-
+                        slot = "1";
+                        search(parking);
+                    }else if(available[1].equals("0")){
+                        slot = "2";
+                        search(parking);
+                    }else if(available[2].equals("0")){
+                        slot = "3";
+                        search(parking);
+                    }else if(available[3].equals("0")){
+                        slot = "4";
+                        search(parking);
                     }
 
                 }
@@ -322,14 +322,28 @@ public class HomeFragment extends Fragment {
 
     }
 
+    private void search(Parking parking) {
+        if(search){
+            search = false;
+            Toast.makeText(getContext(), "Found Parking", Toast.LENGTH_LONG).show();
+            searchDialog.dismiss();
+            addMarker(parking);
+            updateOtp();
+
+        }
+    }
+
     private void updateOtp() {
         DatabaseReference firebaseDatabase = FirebaseDatabase.getInstance().getReference(new FirebaseDatabaseClass().getOtp());
         firebaseDatabase.child("OTP").setValue(new Otp(otp));
+        otpDialog.show();
+        otpDialog.otpMessage.setText(otp+"");
+        otpDialog.slotNumberTextView.setText(slot);
     }
 
     private void generateOtp() {
         Random random = new Random();
-        while(otp<=9999){
+        while(otp<=9999 && otp>=1000){
             otp = random.nextInt(9999);
         }
     }
