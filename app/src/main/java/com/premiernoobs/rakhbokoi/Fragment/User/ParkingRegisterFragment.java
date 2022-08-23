@@ -97,8 +97,7 @@ public class ParkingRegisterFragment extends Fragment {
 
                 // firebase
                 DatabaseReference firebaseDatabase = FirebaseDatabase.getInstance().getReference(new FirebaseDatabaseClass().getParking());
-                String key = firebaseDatabase.push().getKey();
-                firebaseDatabase.child(key).setValue(new Parking(addressEditText.getText().toString().trim(),
+                firebaseDatabase.setValue(new Parking(addressEditText.getText().toString().trim(),
                         Double.parseDouble(longitudeEditText.getText().toString()),
                         Double.parseDouble(latitudeEditText.getText().toString())));
 

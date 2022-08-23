@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,6 +42,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.premiernoobs.rakhbokoi.Class.Class.Parking;
 import com.premiernoobs.rakhbokoi.Class.Class.User;
 import com.premiernoobs.rakhbokoi.Class.Firebase.FirebaseDatabaseClass;
+import com.premiernoobs.rakhbokoi.Dialog.SearchDialog;
 import com.premiernoobs.rakhbokoi.Fragment.User.OtpFragment;
 import com.premiernoobs.rakhbokoi.R;
 import com.premiernoobs.rakhbokoi.Room.LocalUser;
@@ -67,10 +69,13 @@ public class HomeFragment extends Fragment {
     private int LOCATION_PERMISSION_CODE = 1;
 
     // for location
-    private double longitude = 90.426959, latitude = 23.815166;
+    private double longitude, latitude;
 
     // textView
     private TextView nameTextView, carNumberTextView, locationTextView;
+
+    // button
+    private Button searchButton;
 
     // layout as button
     private ConstraintLayout settingsButton;
@@ -84,13 +89,17 @@ public class HomeFragment extends Fragment {
     // firebase
     private DatabaseReference userReference, parkingReference;
     private String name, number;
+    private boolean search = false;
+
+    // dialog
+    private SearchDialog searchDialog;
 
     // map call back
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
         @Override
         public void onMapReady(GoogleMap googleMap) {
-            LatLng bashabo = new LatLng(23.742096, 90.427698);
+            LatLng bashabo = new LatLng(latitude, longitude);
 
             try {
                 // Customise the styling of the base map using a JSON object defined
@@ -109,7 +118,7 @@ public class HomeFragment extends Fragment {
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(bashabo));
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(bashabo, 16.0f));
 
-            getParkingList(googleMap);
+            //getParkingList(googleMap);
         }
     };
 
@@ -124,21 +133,23 @@ public class HomeFragment extends Fragment {
 
                     Parking parking = dataSnapshot.getValue(Parking.class);
 
-                    if(parking.isAvailable()){
-                        googleMap.addMarker(new MarkerOptions().position(
-                                new LatLng(parking.getLatitude(),
-                                        parking.getLongitude())).
-                                title(parking.getAddress()+"\nLatitude: "+parking.getLatitude()
-                                        +"\nLongitude: "+parking.getLongitude()));
+                    /*if(parking.isAvailable()){
 
-                        googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                            @Override
-                            public boolean onMarkerClick(@NonNull Marker marker) {
-                                Toast.makeText(getContext(), marker.getTitle(), Toast.LENGTH_LONG).show();
-                                return false;
-                            }
-                        });
-                    }
+                    }*/
+
+                    googleMap.addMarker(new MarkerOptions().position(
+                            new LatLng(parking.getLatitude(),
+                                    parking.getLongitude())).
+                            title(parking.getAddress()+"\nLatitude: "+parking.getLatitude()
+                                    +"\nLongitude: "+parking.getLongitude()));
+
+                    googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                        @Override
+                        public boolean onMarkerClick(@NonNull Marker marker) {
+                            Toast.makeText(getContext(), marker.getTitle(), Toast.LENGTH_LONG).show();
+                            return false;
+                        }
+                    });
 
                 }
 
@@ -196,6 +207,22 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 settingsPage();
+            }
+        });
+
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                search = true;
+                searchDialog.show();
+            }
+        });
+
+        searchDialog.cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                search = false;
+                searchDialog.dismiss();
             }
         });
         // on click listeners
@@ -401,6 +428,9 @@ public class HomeFragment extends Fragment {
         carNumberTextView = view.findViewById(R.id.textViewId_carNumber);
         locationTextView = view.findViewById(R.id.textView_location);
 
+        // button
+        searchButton = view.findViewById(R.id.buttonId_search);
+
         // imageView
         profileImage = view.findViewById(R.id.circleImageView);
 
@@ -409,6 +439,9 @@ public class HomeFragment extends Fragment {
 
         // layout as button
         settingsButton = view.findViewById(R.id.constraintLayout3);
+
+        // dialog
+        searchDialog = new SearchDialog(getActivity());
 
     }
     // initialize

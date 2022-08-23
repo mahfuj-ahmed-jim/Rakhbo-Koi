@@ -5,7 +5,7 @@ public class Parking {
     private String address;
     private double longitude;
     private double latitude;
-    private boolean available;
+    private String available;
 
     public Parking() {
     }
@@ -14,7 +14,7 @@ public class Parking {
         this.address = address;
         this.longitude = longitude;
         this.latitude = latitude;
-        this.available = false;
+        this.available = "0,0,0,0";
     }
 
     public String getAddress() {
@@ -41,11 +41,11 @@ public class Parking {
         this.latitude = latitude;
     }
 
-    public boolean isAvailable() {
+    public String getAvailable() {
         return available;
     }
 
-    public void setAvailable(boolean available) {
+    public void setAvailable(String available) {
         this.available = available;
     }
 

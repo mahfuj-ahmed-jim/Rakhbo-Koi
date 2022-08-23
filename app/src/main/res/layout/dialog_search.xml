@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:background="@color/black"
+    android:padding="20dp"
+    android:layout_width="320dp"
+    android:layout_height="wrap_content">
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+    </ProgressBar>
+
+    <TextView
+        android:layout_marginTop="20dp"
+        android:gravity="center_vertical"
+        android:textSize="15dp"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:text="Searching for parking"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </TextView>
+
+    <TextView
+        android:layout_marginTop="2dp"
+        android:gravity="center_vertical"
+        android:textSize="12dp"
+        android:textColor="@color/black_custom2"
+        android:textStyle="bold"
+        android:text="We are searching a suitable parking for you. Please wait."
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </TextView>
+
+    <LinearLayout
+        android:layout_marginTop="12dp"
+        android:gravity="right"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/cancelButton_id"
+            android:paddingRight="20dp"
+            android:paddingLeft="20dp"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textSize="18dp"
+            android:text="Cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+
+        </TextView>
+
+    </LinearLayout>
+
+</LinearLayout>
