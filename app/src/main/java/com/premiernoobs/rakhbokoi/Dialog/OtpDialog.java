@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -14,11 +15,16 @@ public class OtpDialog {
 
     private Activity activity;
     private Dialog searchDialog;
-    public TextView directionButton, otpMessage, slotNumberTextView, addressTextView, statusTextView, sessionButton;
+    public TextView directionButton, otpMessage, slotNumberTextView, addressTextView, statusTextView;
 
     public OtpDialog(Activity activity) {
         this.activity = activity;
         setUpDialog();
+    }
+
+    public void setVisible(){
+        directionButton.setVisibility(View.VISIBLE);
+        directionButton.setText("End Session");
     }
 
     public void show(){
@@ -38,7 +44,6 @@ public class OtpDialog {
         slotNumberTextView = searchDialog.findViewById(R.id.textViewId_slot);
         addressTextView = searchDialog.findViewById(R.id.textViewId_address);
         statusTextView = searchDialog.findViewById(R.id.textViewId_status);
-        sessionButton = searchDialog.findViewById(R.id.cancelSession_id);
     }
 
 }

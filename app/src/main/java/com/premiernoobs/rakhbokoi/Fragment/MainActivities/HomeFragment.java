@@ -34,7 +34,6 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.FirebaseError;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -44,10 +43,8 @@ import com.premiernoobs.rakhbokoi.Class.Class.Parking;
 import com.premiernoobs.rakhbokoi.Class.Class.Session;
 import com.premiernoobs.rakhbokoi.Class.Class.User;
 import com.premiernoobs.rakhbokoi.Class.Firebase.FirebaseDatabaseClass;
-import com.premiernoobs.rakhbokoi.Class.Firebase.Otp;
 import com.premiernoobs.rakhbokoi.Dialog.OtpDialog;
 import com.premiernoobs.rakhbokoi.Dialog.SearchDialog;
-import com.premiernoobs.rakhbokoi.Fragment.User.OtpFragment;
 import com.premiernoobs.rakhbokoi.R;
 import com.premiernoobs.rakhbokoi.Room.LocalUser;
 import com.premiernoobs.rakhbokoi.Room.MainDatabase;
@@ -93,8 +90,8 @@ public class HomeFragment extends Fragment {
 
     // firebase
     private DatabaseReference userReference, parkingReference, parkingAvailabilityReference;
-    private String name, number, slot;
-    private boolean search = false;
+    private String name, number, slot, key;
+    private boolean search = false, status;
     public static GoogleMap googleMap;
     private int otp;
 
@@ -123,7 +120,7 @@ public class HomeFragment extends Fragment {
 
             }
 
-            //googleMap.addMarker(new MarkerOptions().position(bashabo).title("Marker in Sydney"));
+            googleMap.addMarker(new MarkerOptions().position(bashabo).title("Marker in Sydney"));
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(bashabo));
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(bashabo, 16.0f));
 
@@ -200,6 +197,56 @@ public class HomeFragment extends Fragment {
             public void onClick(View view) {
                 search = false;
                 searchDialog.dismiss();
+            }
+        });
+
+        otpDialog.directionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if(otpDialog.directionButton.getText().equals("End Session")){
+
+                    Log.d("Verify", "1");
+                    parkingAvailabilityReference = FirebaseDatabase.getInstance().
+                            getReference(new FirebaseDatabaseClass().getParking()+" Availability");
+                    parkingAvailabilityReference.child(key);
+                    parkingAvailabilityReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            Log.d("Verify", "2");
+                            String [] value = dataSnapshot.getValue().toString().split("=");
+                            value[1] = value[1].substring(0, value[1].length() - 1);
+                            String[] available = value[1].split(",");
+
+                            if(slot.equals("1")){
+                                available[0] = "0";
+                            }else if(slot.equals("2")){
+                                available[1] = "0";
+                            }else if(slot.equals("3")){
+                                available[2] = "0";
+                            }else if(slot.equals("4")){
+                                available[3] = "0";
+                            }
+
+                            changeAvailability(key, available);
+                            changeStatus("yes");
+                            Toast.makeText(getContext(), "Session End", Toast.LENGTH_LONG).show();
+                            otpDialog.dismiss();
+
+                            otpDialog.directionButton.setText("Direction");
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
+                }else{
+
+                }
+
             }
         });
         // on click listeners
@@ -293,14 +340,26 @@ public class HomeFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                if(search){
+                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
 
-                    for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+                    Parking parking = dataSnapshot.getValue(Parking.class);
+                    String[] available = parking.getAvailable().split(",");
 
-                        Parking parking = dataSnapshot.getValue(Parking.class);
-                        String[] available = parking.getAvailable().split(",");
-                        getAvailability(dataSnapshot.getKey(), parking, available);
+                    key = dataSnapshot.getKey();
 
+                    if(search){
+                        changeStatus("running");
+                        getAvailability(key, parking, available);
+                    }else{
+                        try{
+                            if(available[Integer.parseInt(slot)-1].equals("0") && status){
+                                changeStatus("no");
+                                status = false;
+                                search  = true;
+                            }
+                        }catch (Exception e){
+                            Log.d("Verify", "Error : "+e.getMessage());
+                        }
                     }
 
                 }
@@ -313,6 +372,11 @@ public class HomeFragment extends Fragment {
             }
         });
 
+    }
+
+    private void changeStatus(String status) {
+        DatabaseReference statusReference = FirebaseDatabase.getInstance().getReference(new FirebaseDatabaseClass().getSession());
+        statusReference.setValue(new Session(status));
     }
 
     private void changeAvailability(String key, String[] available) {
@@ -337,16 +401,18 @@ public class HomeFragment extends Fragment {
         getStatus();
     }
 
-    private void getStatus() {
+    private String getStatus() {
+
+        final String[] value = new String[1];
 
         DatabaseReference statusReference = FirebaseDatabase.getInstance().getReference(new FirebaseDatabaseClass().getSession());
         statusReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Session session = dataSnapshot.getValue(Session.class);
-                String value = session.getClear();
-                otpDialog.statusTextView.setText(value);
-                if(value.equals("On Going") || value.equals("verified")){
+                value[0] = session.getClear();
+                otpDialog.statusTextView.setText(value[0]);
+                if(value[0].equals("verified")){
                     otpDialog.directionButton.setVisibility(View.GONE);
                 }else{
                     otpDialog.directionButton.setVisibility(View.VISIBLE);
@@ -358,6 +424,8 @@ public class HomeFragment extends Fragment {
 
             }
         });
+
+        return value[0];
     }
 
     private void getAvailability(String key, Parking parking, String[] available1) {
@@ -379,6 +447,7 @@ public class HomeFragment extends Fragment {
                     search(parking);
                     available[0] = "2";
                     changeAvailability(key, available);
+                    checkParking(0);
 
                 }else if(available[1].equals("0") && available1[1].equals("0")){
 
@@ -387,6 +456,7 @@ public class HomeFragment extends Fragment {
                     search(parking);
                     available[1] = "2";
                     changeAvailability(key, available);
+                    checkParking(1);
 
                 }else if(available[2].equals("0") && available1[2].equals("0")){
 
@@ -395,6 +465,7 @@ public class HomeFragment extends Fragment {
                     search(parking);
                     available[2] = "2";
                     changeAvailability(key, available);
+                    checkParking(2);
 
                 }else if(available[3].equals("0") && available1[3].equals("0")){
 
@@ -403,6 +474,38 @@ public class HomeFragment extends Fragment {
                     search(parking);
                     available[3] = "2";
                     changeAvailability(key, available);
+                    checkParking(3);
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+
+    public void checkParking(int element){
+
+        DatabaseReference parkingReference1 = FirebaseDatabase.getInstance().getReference(new FirebaseDatabaseClass().getParking());
+        parkingReference1.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+
+                    Parking parking = dataSnapshot.getValue(Parking.class);
+                    String[] available = parking.getAvailable().split(",");
+
+                    if(available[element].equals("1") && otpDialog.statusTextView.getText().equals("verified")){
+                        otpDialog.statusTextView.setText("On Going");
+                        changeStatus("On Going");
+                        status = true;
+                        otpDialog.setVisible();
+                    }
 
                 }
 
@@ -554,6 +657,7 @@ public class HomeFragment extends Fragment {
         initializeViews(view);
         getUserInformation();
         permissionForLocation(true); // location
+        getStatus();
     }
 
     private void initializeViews(View view) {
