@@ -34,12 +34,14 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.FirebaseError;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.premiernoobs.rakhbokoi.Class.Class.Parking;
+import com.premiernoobs.rakhbokoi.Class.Class.Session;
 import com.premiernoobs.rakhbokoi.Class.Class.User;
 import com.premiernoobs.rakhbokoi.Class.Firebase.FirebaseDatabaseClass;
 import com.premiernoobs.rakhbokoi.Class.Firebase.Otp;
@@ -291,23 +293,59 @@ public class HomeFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+                if(search){
 
-                    Parking parking = dataSnapshot.getValue(Parking.class);
-                    String[] available = parking.getAvailable().split(",");
+                    for(DataSnapshot dataSnapshot : snapshot.getChildren()){
 
-                    if(available[0].equals("0")){
-                        slot = "1";
-                        search(parking);
-                    }else if(available[1].equals("0")){
-                        slot = "2";
-                        search(parking);
-                    }else if(available[2].equals("0")){
-                        slot = "3";
-                        search(parking);
-                    }else if(available[3].equals("0")){
-                        slot = "4";
-                        search(parking);
+                        Parking parking = dataSnapshot.getValue(Parking.class);
+                        String[] available = parking.getAvailable().split(",");
+
+                        if(available[0].equals("0")){
+
+                            search = false;
+                            slot = "1";
+                            search(parking);
+                            if(available[0].equals("1")){
+
+                            }
+                            available[0] = "2";
+                            changeAvailability(dataSnapshot.getKey(), parking, available);
+
+                        }else if(available[1].equals("0")){
+
+                            search = false;
+                            slot = "2";
+                            search(parking);
+                            if(available[1].equals("1")){
+
+                            }
+                            available[1] = "2";
+                            changeAvailability(dataSnapshot.getKey(), parking, available);
+
+                        }else if(available[2].equals("0")){
+
+                            search = false;
+                            slot = "3";
+                            search(parking);
+                            if(available[2].equals("1")){
+
+                            }
+                            available[2] = "2";
+                            changeAvailability(dataSnapshot.getKey(), parking, available);
+
+                        }else if(available[3].equals("0")){
+
+                            search = false;
+                            slot = "4";
+                            search(parking);
+                            if(available[3].equals("1")){
+
+                            }
+                            available[3] = "2";
+                            changeAvailability(dataSnapshot.getKey(), parking, available);
+
+                        }
+
                     }
 
                 }
@@ -322,30 +360,56 @@ public class HomeFragment extends Fragment {
 
     }
 
-    private void search(Parking parking) {
-        if(search){
-            search = false;
-            Toast.makeText(getContext(), "Found Parking", Toast.LENGTH_LONG).show();
-            searchDialog.dismiss();
-            addMarker(parking);
-            updateOtp();
+    private void changeAvailability(String key, Parking parking, String[] available) {
 
-        }
+        parkingReference = FirebaseDatabase.getInstance().getReference(new FirebaseDatabaseClass().getParking());
+        parking.setAvailable(available[0]+","+available[1]+","+available[2]+","+available[3]);
+        parkingReference.child(key).setValue(parking);
+
     }
 
-    private void updateOtp() {
+    private void search(Parking parking) {
+        Toast.makeText(getContext(), "Found Parking", Toast.LENGTH_LONG).show();
+        searchDialog.dismiss();
+        addMarker(parking);
+        updateOtp(parking);
+    }
+
+    private void updateOtp(Parking parking) {
         DatabaseReference firebaseDatabase = FirebaseDatabase.getInstance().getReference(new FirebaseDatabaseClass().getOtp());
-        firebaseDatabase.child("OTP").setValue(new Otp(otp));
+        firebaseDatabase.child("OTP").setValue(otp);
         otpDialog.show();
         otpDialog.otpMessage.setText(otp+"");
         otpDialog.slotNumberTextView.setText(slot);
+        getStatus();
+    }
+
+    private void getStatus() {
+
+        DatabaseReference statusReference = FirebaseDatabase.getInstance().getReference(new FirebaseDatabaseClass().getSession());
+        statusReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Session session = dataSnapshot.getValue(Session.class);
+                String value = session.getClear();
+                otpDialog.statusTextView.setText(value);
+                if(value.equals("On Going") || value.equals("verified")){
+                    otpDialog.directionButton.setVisibility(View.GONE);
+                }else{
+                    otpDialog.directionButton.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     private void generateOtp() {
         Random random = new Random();
-        while(otp<=9999 && otp>=1000){
-            otp = random.nextInt(9999);
-        }
+        otp = random.nextInt(9999);
     }
     // firebase
 
