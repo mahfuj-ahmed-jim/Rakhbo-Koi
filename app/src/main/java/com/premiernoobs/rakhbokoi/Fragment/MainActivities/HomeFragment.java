@@ -92,7 +92,7 @@ public class HomeFragment extends Fragment {
     private TextInputEditText locationEditText;
 
     // firebase
-    private DatabaseReference userReference, parkingReference;
+    private DatabaseReference userReference, parkingReference, parkingAvailabilityReference;
     private String name, number, slot;
     private boolean search = false;
     public static GoogleMap googleMap;
@@ -299,52 +299,7 @@ public class HomeFragment extends Fragment {
 
                         Parking parking = dataSnapshot.getValue(Parking.class);
                         String[] available = parking.getAvailable().split(",");
-
-                        if(available[0].equals("0")){
-
-                            search = false;
-                            slot = "1";
-                            search(parking);
-                            if(available[0].equals("1")){
-
-                            }
-                            available[0] = "2";
-                            changeAvailability(dataSnapshot.getKey(), parking, available);
-
-                        }else if(available[1].equals("0")){
-
-                            search = false;
-                            slot = "2";
-                            search(parking);
-                            if(available[1].equals("1")){
-
-                            }
-                            available[1] = "2";
-                            changeAvailability(dataSnapshot.getKey(), parking, available);
-
-                        }else if(available[2].equals("0")){
-
-                            search = false;
-                            slot = "3";
-                            search(parking);
-                            if(available[2].equals("1")){
-
-                            }
-                            available[2] = "2";
-                            changeAvailability(dataSnapshot.getKey(), parking, available);
-
-                        }else if(available[3].equals("0")){
-
-                            search = false;
-                            slot = "4";
-                            search(parking);
-                            if(available[3].equals("1")){
-
-                            }
-                            available[3] = "2";
-                            changeAvailability(dataSnapshot.getKey(), parking, available);
-
-                        }
+                        getAvailability(dataSnapshot.getKey(), parking, available);
 
                     }
 
@@ -360,11 +315,9 @@ public class HomeFragment extends Fragment {
 
     }
 
-    private void changeAvailability(String key, Parking parking, String[] available) {
+    private void changeAvailability(String key, String[] available) {
 
-        parkingReference = FirebaseDatabase.getInstance().getReference(new FirebaseDatabaseClass().getParking());
-        parking.setAvailable(available[0]+","+available[1]+","+available[2]+","+available[3]);
-        parkingReference.child(key).setValue(parking);
+        parkingAvailabilityReference.child(key).setValue(available[0]+","+available[1]+","+available[2]+","+available[3]);
 
     }
 
@@ -405,6 +358,62 @@ public class HomeFragment extends Fragment {
 
             }
         });
+    }
+
+    private void getAvailability(String key, Parking parking, String[] available1) {
+
+        parkingAvailabilityReference = FirebaseDatabase.getInstance().
+                getReference(new FirebaseDatabaseClass().getParking()+" Availability");
+        parkingAvailabilityReference.child("-NAAVe71RxJdEfG6d61e");
+        parkingAvailabilityReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String [] value = dataSnapshot.getValue().toString().split("=");
+                value[1] = value[1].substring(0, value[1].length() - 1);
+                String[] available = value[1].split(",");
+
+                if(available[0].equals("0") && available1[0].equals("0")){
+
+                    search = false;
+                    slot = "1";
+                    search(parking);
+                    available[0] = "2";
+                    changeAvailability(key, available);
+
+                }else if(available[1].equals("0") && available1[1].equals("0")){
+
+                    search = false;
+                    slot = "2";
+                    search(parking);
+                    available[1] = "2";
+                    changeAvailability(key, available);
+
+                }else if(available[2].equals("0") && available1[2].equals("0")){
+
+                    search = false;
+                    slot = "3";
+                    search(parking);
+                    available[2] = "2";
+                    changeAvailability(key, available);
+
+                }else if(available[3].equals("0") && available1[3].equals("0")){
+
+                    search = false;
+                    slot = "4";
+                    search(parking);
+                    available[3] = "2";
+                    changeAvailability(key, available);
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
     }
 
     private void generateOtp() {
