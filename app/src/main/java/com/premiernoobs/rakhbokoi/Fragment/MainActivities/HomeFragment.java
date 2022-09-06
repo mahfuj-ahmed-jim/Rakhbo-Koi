@@ -80,7 +80,7 @@ public class HomeFragment extends Fragment {
     private Button searchButton;
 
     // layout as button
-    private ConstraintLayout settingsButton;
+    private ConstraintLayout settingsButton, paymentLayout, cashLayout, bkashLayout, nagadLayout;
 
     // imageView
     private CircleImageView profileImage;
@@ -235,6 +235,8 @@ public class HomeFragment extends Fragment {
 
                             otpDialog.directionButton.setText("Direction");
 
+                            paymentLayout.setVisibility(View.VISIBLE);
+
                         }
 
                         @Override
@@ -247,6 +249,27 @@ public class HomeFragment extends Fragment {
 
                 }
 
+            }
+        });
+
+        cashLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                paymentLayout.setVisibility(View.GONE);
+            }
+        });
+
+        bkashLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                paymentLayout.setVisibility(View.GONE);
+            }
+        });
+
+        nagadLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                paymentLayout.setVisibility(View.GONE);
             }
         });
         // on click listeners
@@ -503,7 +526,7 @@ public class HomeFragment extends Fragment {
                     if(available[element].equals("1") && otpDialog.statusTextView.getText().equals("verified")){
                         otpDialog.statusTextView.setText("On Going");
                         changeStatus("On Going");
-                        status = true;
+                        //status = true;
                         otpDialog.setVisible();
                     }
 
@@ -678,6 +701,12 @@ public class HomeFragment extends Fragment {
 
         // layout as button
         settingsButton = view.findViewById(R.id.constraintLayout3);
+
+        // layout
+        paymentLayout = view.findViewById(R.id.paymentLayoutId);
+        cashLayout = view.findViewById(R.id.cashLayoutId);
+        bkashLayout = view.findViewById(R.id.bkashLayoutId);
+        nagadLayout = view.findViewById(R.id.nagadLayoutId);
 
         // dialog
         searchDialog = new SearchDialog(getActivity());
