@@ -10,3 +10,12 @@ https://user-images.githubusercontent.com/76824955/208346769-c22e6537-dc41-461e-
 - Search for the situable parking for user
 - Automatic detect car
 - Safety alarm
+
+## Tools 
+
+- Raspberry Pi
+- Android Studio
+- Firebase
+- Python
+- Java
+- Room Database
